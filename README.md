@@ -1,4 +1,4 @@
-# Pulse
+<h1 align="center"><img src="art/logo.svg" alt="" width="28" valign="middle"> Pulse</h1>
 
 Lightweight Blade components for Laravel and Livewire applications.
 
@@ -23,6 +23,11 @@ Components read their colors from a small set of CSS custom properties —
 `--pulse-neutral-50` through `--pulse-neutral-950`, and `--pulse-accent` /
 `--pulse-accent-text` / `--pulse-accent-contrast`. Define them once in your
 own stylesheet (or override per-app) and every component picks them up.
+
+## Icons
+
+The bundled icon set is an original set designed by the BytesPulse O.E.
+team for this package.
 
 ## Overriding a component
 
