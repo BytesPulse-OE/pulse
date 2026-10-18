@@ -4,7 +4,7 @@
     <select
         data-pulse-select
         {{ $disabled ? 'disabled' : '' }}
-        {{ $attributes->class('block w-full appearance-none border-0 border-b-2 border-(--pulse-neutral-300) bg-transparent px-1 py-2 pr-7 text-(--pulse-neutral-900) transition focus:border-(--pulse-accent) focus:outline-none focus:ring-0 sm:text-sm disabled:cursor-not-allowed disabled:text-(--pulse-neutral-400) dark:text-(--pulse-neutral-50) dark:border-(--pulse-neutral-700)') }}
+        {{ $attributes->class('block w-full appearance-none border-0 border-b border-(--pulse-neutral-300) bg-transparent px-1 py-2 pr-7 text-(--pulse-neutral-900) transition focus:border-(--pulse-accent) focus:outline-none focus:ring-0 sm:text-sm disabled:cursor-not-allowed disabled:text-(--pulse-neutral-400) dark:text-(--pulse-neutral-50) dark:border-(--pulse-neutral-700)') }}
     >
         {{ $slot }}
     </select>
