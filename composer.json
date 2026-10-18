@@ -1,0 +1,48 @@
+{
+    "name": "bytespulse-oe/pulse",
+    "description": "Lightweight Blade components for Laravel and Livewire apps.",
+    "keywords": [
+        "php",
+        "laravel",
+        "components"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "BytespulseOe\\Pulse\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "BytespulseOE",
+            "email": "info@bytespulse.gr",
+            "homepage": "https://www.bytespulse.gr",
+            "role": "Creator"
+        },
+        {
+            "name": "PStoreGR",
+            "email": "pstoregr@gmail.com",
+            "homepage": "https://www.pstoregr.dev",
+            "role": "Maintainer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist"
+    },
+    "require": {
+        "php": "^8.4",
+        "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/view": "^10.0|^11.0|^12.0|^13.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BytespulseOe\\Pulse\\PulseServiceProvider"
+            ]
+        }
+    }
+}
