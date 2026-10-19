@@ -33,5 +33,18 @@ final class PulseServiceProvider extends ServiceProvider
                 );
             }
         }
+
+        // Interactive components (select, sidebar) need a small amount of
+        // JS. The package ships only Blade/CSS — no bundler of its own — so
+        // this publishes the plain source files for a consuming app to pull
+        // into its OWN Vite/bundler pipeline (same idea as the Blade
+        // override path above: the app owns its final build, we just supply
+        // the source). Not auto-wired into anything — see the README for the
+        // one-line import a consumer adds after publishing.
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                dirname(__DIR__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'js' => resource_path('js'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'pulse'),
+            ], 'pulse-js');
+        }
     }
 }

@@ -24,6 +24,29 @@ Components read their colors from a small set of CSS custom properties —
 `--pulse-accent-text` / `--pulse-accent-contrast`. Define them once in your
 own stylesheet (or override per-app) and every component picks them up.
 
+## Interactive components
+
+`<x-pulse::select>` and `<x-pulse::sidebar>` need a small amount of
+JavaScript (the custom dropdown, and the mobile open/close behavior). The
+package ships plain, dependency-free source files for these — no bundler of
+its own — so you pull them into your own app's JS build:
+
+```bash
+php artisan vendor:publish --tag=pulse-js
+```
+
+This copies `select.js` and `sidebar.js` into
+`resources/js/vendor/pulse/`. Import whichever components you use from your
+own `resources/js/app.js`:
+
+```js
+import './vendor/pulse/select.js';
+import './vendor/pulse/sidebar.js';
+```
+
+Every other component (button, card, input, and the rest) is markup/CSS
+only — nothing to import for those.
+
 ## Icons
 
 The bundled icon set is an original set designed by the BytesPulse O.E.
