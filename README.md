@@ -24,24 +24,58 @@ Components read their colors from a small set of CSS custom properties —
 `--pulse-accent-text` / `--pulse-accent-contrast`. Define them once in your
 own stylesheet (or override per-app) and every component picks them up.
 
-## Interactive components
+A small JS engine that APPLIES those variables from three preferences
+(appearance: light/dark/system, a neutral palette, an accent color) ships
+alongside the components — see "JavaScript" below. It's optional: define
+the CSS variables yourself, by any means, and the components don't care.
 
-`<x-pulse::select>` and `<x-pulse::sidebar>` need a small amount of
-JavaScript (the custom dropdown, and the mobile open/close behavior). The
-package ships plain, dependency-free source files for these — no bundler of
-its own — so you pull them into your own app's JS build:
+## JavaScript
+
+Three pieces of plain, dependency-free JS — no bundler of its own, so you
+pull whichever you need into your own app's JS build:
 
 ```bash
 php artisan vendor:publish --tag=pulse-js
 ```
 
-This copies `select.js` and `sidebar.js` into
-`resources/js/vendor/pulse/`. Import whichever components you use from your
-own `resources/js/app.js`:
+This copies `select.js`, `sidebar.js`, and `theme.js` into
+`resources/js/vendor/pulse/`.
+
+- **`select.js`** — the custom dropdown behind `<x-pulse::select>`.
+- **`sidebar.js`** — mobile open/close behavior behind `<x-pulse::sidebar>`.
+- **`theme.js`** — the theming engine (see "Theming" above): a `PulseTheme`
+  class that applies appearance/neutral/accent preferences to the
+  `--pulse-*` CSS variables. It owns applying a preference, not picking one
+  — wire it to your own settings UI:
+
+  ```js
+  import PulseTheme from './vendor/pulse/theme.js';
+
+  const theme = new PulseTheme();
+  theme.applyAll();                 // apply saved/default preferences on load
+  theme.setAccent('teal');          // -> persists + re-applies
+  theme.neutrals;                   // -> ['slate', 'gray', 'zinc', 'neutral', 'stone']
+  theme.accents;                    // -> ['red', 'orange', ..., 'rose']
+  ```
+
+  Persistence defaults to plain `localStorage` under `pulse-theme.*` keys,
+  and is fully overridable via the constructor (`storagePrefix`, `read`,
+  `write`, `defaults`) — e.g. to skip persistence inside a preview iframe,
+  scope keys per-tenant, or persist server-side instead:
+
+  ```js
+  const theme = new PulseTheme({
+      storagePrefix: 'my-app-theme',
+      defaults: { accent: 'teal' },
+  });
+  ```
+
+Import whichever of the three you use from your own `resources/js/app.js`:
 
 ```js
 import './vendor/pulse/select.js';
 import './vendor/pulse/sidebar.js';
+import './vendor/pulse/theme.js';
 ```
 
 Every other component (button, card, input, and the rest) is markup/CSS
