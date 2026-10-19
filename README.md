@@ -122,6 +122,24 @@ into `resources/js/vendor/pulse/`.
   });
   ```
 
+  **Tailwind setup note:** `theme.js` builds its CSS variable references at
+  runtime (`var(--color-${palette}-${shade})`), which Tailwind's build-time
+  scanner can't see — it only emits a `--color-X-Y` variable when it finds
+  a literal `bg-X-Y`/`text-X-Y` class somewhere in your scanned source. Add
+  a safelist so every shade of every neutral/accent color is always
+  available, not just the handful some unrelated class happens to use:
+
+  ```css
+  @source inline('{bg,text}-{slate,gray,zinc,neutral,stone}-{50,100,200,300,400,500,600,700,800,900,950}');
+  @source inline('{bg,text}-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,100,200,300,400,500,600,700,800,900,950}');
+  ```
+
+  Without this, only whatever shade some other class in your app already
+  happens to use literally will actually render — every other
+  palette/accent choice silently renders `--pulse-neutral-*`/`--pulse-
+  accent*`-dependent backgrounds and text as transparent/invisible for any
+  visitor who picks it.
+
 Import whichever of the four you use from your own `resources/js/app.js`:
 
 ```js
