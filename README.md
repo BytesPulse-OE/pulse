@@ -29,24 +29,76 @@ A small JS engine that APPLIES those variables from three preferences
 alongside the components — see "JavaScript" below. It's optional: define
 the CSS variables yourself, by any means, and the components don't care.
 
+Two Blade components let a user actually PICK those preferences —
+`<x-pulse::theme-toggle>` and `<x-pulse::color-picker>`, see "Theme picker
+components" below.
+
+## Theme picker components
+
+```blade
+<x-pulse::theme-toggle
+    name="appearance"
+    value="system"
+    :options="[
+        'system' => ['label' => 'System', 'icon' => 'device-desktop'],
+        'light' => ['label' => 'Light', 'icon' => 'sun'],
+        'dark' => ['label' => 'Dark', 'icon' => 'moon'],
+    ]"
+/>
+```
+
+A segmented pill for the appearance preference. Pure CSS/radio-based, no JS
+required — a real radio input per option, visually hidden, with the pill
+look driven entirely by `peer-checked`. `options` and `value` both default
+to light/dark/system if omitted.
+
+```blade
+<x-pulse::color-picker
+    name="accent"
+    value="indigo"
+    :options="[
+        'indigo' => ['label' => 'Indigo', 'class' => 'bg-indigo-500'],
+        'teal' => ['label' => 'Teal', 'class' => 'bg-teal-500'],
+        // ...
+    ]"
+/>
+```
+
+A "current swatch + label" trigger that expands into the full swatch grid
+on click (needs `color-picker.js`, see "JavaScript" below — without it, the
+grid is just always visible, which is still fully functional). Each
+option's `class` is whatever CSS class paints that swatch — the component
+doesn't know or care about Tailwind specifically, pass any class(es) that
+produce a background color. An optional `check_class` per option overrides
+the selected-checkmark color (defaults to `text-white`; useful for
+light/warm swatches that need a dark checkmark to stay legible).
+
+Both components emit real `name`/`value` radio inputs, so they work inside
+an ordinary HTML form exactly like native `<input type="radio">` would —
+wire them to whatever your settings page already posts.
+
 ## JavaScript
 
-Three pieces of plain, dependency-free JS — no bundler of its own, so you
+Four pieces of plain, dependency-free JS — no bundler of its own, so you
 pull whichever you need into your own app's JS build:
 
 ```bash
 php artisan vendor:publish --tag=pulse-js
 ```
 
-This copies `select.js`, `sidebar.js`, and `theme.js` into
-`resources/js/vendor/pulse/`.
+This copies `select.js`, `sidebar.js`, `theme.js`, and `color-picker.js`
+into `resources/js/vendor/pulse/`.
 
 - **`select.js`** — the custom dropdown behind `<x-pulse::select>`.
 - **`sidebar.js`** — mobile open/close behavior behind `<x-pulse::sidebar>`.
+- **`color-picker.js`** — the collapse/expand behavior behind
+  `<x-pulse::color-picker>` (see "Theme picker components" above).
 - **`theme.js`** — the theming engine (see "Theming" above): a `PulseTheme`
   class that applies appearance/neutral/accent preferences to the
   `--pulse-*` CSS variables. It owns applying a preference, not picking one
-  — wire it to your own settings UI:
+  — pair it with `<x-pulse::theme-toggle>`/`<x-pulse::color-picker>` (or
+  your own UI) and wire `setAppearance()`/`setNeutral()`/`setAccent()` to
+  their `change` events:
 
   ```js
   import PulseTheme from './vendor/pulse/theme.js';
@@ -70,12 +122,13 @@ This copies `select.js`, `sidebar.js`, and `theme.js` into
   });
   ```
 
-Import whichever of the three you use from your own `resources/js/app.js`:
+Import whichever of the four you use from your own `resources/js/app.js`:
 
 ```js
 import './vendor/pulse/select.js';
 import './vendor/pulse/sidebar.js';
 import './vendor/pulse/theme.js';
+import './vendor/pulse/color-picker.js';
 ```
 
 Every other component (button, card, input, and the rest) is markup/CSS
