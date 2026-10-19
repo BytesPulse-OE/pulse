@@ -152,6 +152,32 @@ import './vendor/pulse/color-picker.js';
 Every other component (button, card, input, and the rest) is markup/CSS
 only — nothing to import for those.
 
+## Media
+
+```blade
+<x-pulse::media
+    src="/storage/media/sunset.jpg"
+    alt="Sunset over the harbor"
+    caption="Taken from the pier, August 2026"
+    width="1600"
+    height="900"
+/>
+```
+
+Renders an `<img>` — or a `<figure>`/`<figcaption>` pair when `caption` is
+given. Plain scalar props (`src`/`alt`/`caption`/`width`/`height`), same
+precedent as `<x-pulse::avatar>`: this package doesn't know about a
+media/attachment model, so a consuming app with one just maps its fields
+onto these props at the call site, e.g.
+`:src="$media->url()" :alt="$media->alt_text" :caption="$media->caption"`.
+
+No default sizing classes are imposed — pass whatever `class` you need
+(a full-width content image, a small cropped thumbnail, whatever); the
+component only adds the caption/figure structure when asked for one.
+`width`/`height` are passed through to the `<img>` tag itself (not for
+display sizing — that's `class`'s job) so the browser can reserve the
+right aspect ratio before the image loads, avoiding layout shift.
+
 ## Icons
 
 The bundled icon set is an original set designed by the BytesPulse O.E.
