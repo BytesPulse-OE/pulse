@@ -185,6 +185,32 @@ override the button labels for that one call; the component's own
 `confirmLabel`/`cancelLabel` props (both default to "Confirm"/"Cancel")
 set the page-wide default.
 
+## Pagination
+
+```blade
+<x-pulse::pagination :paginator="$posts" />
+```
+
+Renders Previous/Next controls, numbered page links, and a "Showing X to Y
+of Z results" summary for any standard Laravel paginator (anything from
+`->paginate()`/`->simplePaginate()`/`->cursorPaginate()` with `links()`
+support) — pass the paginator instance straight through, query strings on
+the current request are preserved automatically since it reads the
+paginator's own URLs. Renders nothing when there's only one page.
+
+```blade
+<x-pulse::pagination
+    :paginator="$posts"
+    previous-label="Older"
+    next-label="Newer"
+    summary="{{ $posts->total() }} posts total"
+/>
+```
+
+`previousLabel`/`nextLabel` (default "Previous"/"Next") and `summary`
+(default "Showing X to Y of Z results") are all overridable props, same
+English-default/override convention as `<x-pulse::confirm-dialog>`.
+
 ## Media
 
 ```blade
