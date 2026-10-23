@@ -79,20 +79,22 @@ wire them to whatever your settings page already posts.
 
 ## JavaScript
 
-Four pieces of plain, dependency-free JS — no bundler of its own, so you
+Five pieces of plain, dependency-free JS — no bundler of its own, so you
 pull whichever you need into your own app's JS build:
 
 ```bash
 php artisan vendor:publish --tag=pulse-js
 ```
 
-This copies `select.js`, `sidebar.js`, `theme.js`, and `color-picker.js`
-into `resources/js/vendor/pulse/`.
+This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`, and
+`confirm-dialog.js` into `resources/js/vendor/pulse/`.
 
 - **`select.js`** — the custom dropdown behind `<x-pulse::select>`.
 - **`sidebar.js`** — mobile open/close behavior behind `<x-pulse::sidebar>`.
 - **`color-picker.js`** — the collapse/expand behavior behind
   `<x-pulse::color-picker>` (see "Theme picker components" above).
+- **`confirm-dialog.js`** — the open/close/Promise behavior behind
+  `<x-pulse::confirm-dialog>` (see "Confirm dialog" below).
 - **`theme.js`** — the theming engine (see "Theming" above): a `PulseTheme`
   class that applies appearance/neutral/accent preferences to the
   `--pulse-*` CSS variables. It owns applying a preference, not picking one
@@ -140,17 +142,48 @@ into `resources/js/vendor/pulse/`.
   accent*`-dependent backgrounds and text as transparent/invisible for any
   visitor who picks it.
 
-Import whichever of the four you use from your own `resources/js/app.js`:
+Import whichever of the five you use from your own `resources/js/app.js`:
 
 ```js
 import './vendor/pulse/select.js';
 import './vendor/pulse/sidebar.js';
 import './vendor/pulse/theme.js';
 import './vendor/pulse/color-picker.js';
+import './vendor/pulse/confirm-dialog.js';
 ```
 
 Every other component (button, card, input, and the rest) is markup/CSS
 only — nothing to import for those.
+
+## Confirm dialog
+
+```blade
+<x-pulse::confirm-dialog />
+```
+
+Replaces `window.confirm()` with Pulse-styled UI. Include the markup once
+per page (anywhere, it's a fixed-position overlay hidden by default), then
+trigger it from your own JS via a Promise-based `window.ConfirmDialog.ask()`
+(needs `confirm-dialog.js`, see "JavaScript" above):
+
+```js
+var confirmed = await window.ConfirmDialog.ask('Replace the content?', {
+    title: 'Replace content',
+    confirmLabel: 'Replace',
+    cancelLabel: 'Cancel',
+});
+
+if (confirmed) {
+    // proceed
+}
+```
+
+Deliberately not triggered via `data-*` attributes like the media picker —
+every caller needs the resolved answer before continuing, not just a
+fire-and-forget open. `confirmLabel`/`cancelLabel` passed to `ask()`
+override the button labels for that one call; the component's own
+`confirmLabel`/`cancelLabel` props (both default to "Confirm"/"Cancel")
+set the page-wide default.
 
 ## Media
 
