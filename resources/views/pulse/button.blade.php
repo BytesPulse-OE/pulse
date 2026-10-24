@@ -8,7 +8,7 @@ $colorClasses = match ($variant) {
 };
 
 $sizing = $iconOnly ? 'p-2' : 'px-5 py-2';
-$classes = "inline-flex items-center justify-center gap-2 align-middle rounded-full $sizing text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--pulse-accent) disabled:opacity-50 $colorClasses";
+$classes = "inline-flex items-center justify-center gap-2 align-middle shrink-0 whitespace-nowrap rounded-full $sizing text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--pulse-accent) disabled:opacity-50 $colorClasses";
 @endphp
 
 @if ($attributes->has('href'))
