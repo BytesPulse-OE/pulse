@@ -77,17 +77,43 @@ Both components emit real `name`/`value` radio inputs, so they work inside
 an ordinary HTML form exactly like native `<input type="radio">` would —
 wire them to whatever your settings page already posts.
 
+## Button
+
+```blade
+<x-pulse::button variant="primary">Save</x-pulse::button>
+<x-pulse::button variant="secondary" icon="chevron-left">Back</x-pulse::button>
+<x-pulse::button variant="danger" type="submit">Delete</x-pulse::button>
+```
+
+`variant` is `primary` (default), `secondary`, or `danger`. `icon` takes any
+bundled icon name; `iconOnly` drops the text label for an icon-only button.
+Passing `href` renders an `<a>` instead of a `<button>` with the same
+classes. Every other attribute (`type`, `class`, `wire:click`, ...) passes
+straight through.
+
+A `loading` prop renders the button already in its loading state — disabled,
+spinner showing in place of any icon:
+
+```blade
+<x-pulse::button :loading="$form->processing">Save</x-pulse::button>
+```
+
+For plain form submits this is automatic instead — see `button-loading.js`
+below — `loading` is for cases the JS can't see coming on its own, like a
+Livewire action already in flight on first render, or a button driven by
+your own fetch call.
+
 ## JavaScript
 
-Five pieces of plain, dependency-free JS — no bundler of its own, so you
+Six pieces of plain, dependency-free JS — no bundler of its own, so you
 pull whichever you need into your own app's JS build:
 
 ```bash
 php artisan vendor:publish --tag=pulse-js
 ```
 
-This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`, and
-`confirm-dialog.js` into `resources/js/vendor/pulse/`.
+This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`,
+`confirm-dialog.js`, and `button-loading.js` into `resources/js/vendor/pulse/`.
 
 - **`select.js`** — the custom dropdown behind `<x-pulse::select>`.
 - **`sidebar.js`** — mobile open/close behavior behind `<x-pulse::sidebar>`.
@@ -95,6 +121,23 @@ This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`, and
   `<x-pulse::color-picker>` (see "Theme picker components" above).
 - **`confirm-dialog.js`** — the open/close/Promise behavior behind
   `<x-pulse::confirm-dialog>` (see "Confirm dialog" below).
+- **`button-loading.js`** — the loading-state behavior behind
+  `<x-pulse::button>` (see "Button" above). Automatic: any
+  `<button type="submit">` inside a `<form>` gets disabled with its spinner
+  shown the moment that form is submitted — no markup or JS call needed.
+  Opt a form out with `<form data-no-loading>`, or a single button out with
+  `<x-pulse::button data-no-loading>`. For anything not driven by a plain
+  form submit (a fetch call, a Livewire action), toggle it yourself:
+
+  ```js
+  import './vendor/pulse/button-loading.js';
+
+  PulseButton.setLoading(buttonEl, true);   // enable
+  PulseButton.setLoading(buttonEl, false);  // disable
+  ```
+
+  Both the automatic and manual paths toggle the same markup `:loading="true"`
+  renders server-side, so every path looks identical.
 - **`theme.js`** — the theming engine (see "Theming" above): a `PulseTheme`
   class that applies appearance/neutral/accent preferences to the
   `--pulse-*` CSS variables. It owns applying a preference, not picking one
@@ -142,7 +185,7 @@ This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`, and
   accent*`-dependent backgrounds and text as transparent/invisible for any
   visitor who picks it.
 
-Import whichever of the five you use from your own `resources/js/app.js`:
+Import whichever of the six you use from your own `resources/js/app.js`:
 
 ```js
 import './vendor/pulse/select.js';
@@ -150,6 +193,7 @@ import './vendor/pulse/sidebar.js';
 import './vendor/pulse/theme.js';
 import './vendor/pulse/color-picker.js';
 import './vendor/pulse/confirm-dialog.js';
+import './vendor/pulse/button-loading.js';
 ```
 
 Every other component (button, card, input, and the rest) is markup/CSS
