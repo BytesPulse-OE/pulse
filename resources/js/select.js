@@ -11,6 +11,12 @@
  * Vanilla JS, no framework dependency — consistent with sidebar.js (this
  * package's other interactive component) and with a consuming app's own
  * theming script, if it has one.
+ *
+ * Runs once for every [data-pulse-select] present at load. A select added
+ * later — a repeater row cloned from a <template>, say — won't match that
+ * initial query, so it stays a plain unstyled native <select>; call
+ * window.PulseSelect.enhance(select) on it after inserting it (same
+ * convention as window.PulseButton.setLoading / window.ConfirmDialog.ask).
  */
 (function () {
     var instanceId = 0;
@@ -204,4 +210,6 @@
     }
 
     document.querySelectorAll('[data-pulse-select]').forEach(enhance);
+
+    window.PulseSelect = { enhance: enhance };
 })();

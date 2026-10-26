@@ -115,7 +115,16 @@ php artisan vendor:publish --tag=pulse-js
 This copies `select.js`, `sidebar.js`, `theme.js`, `color-picker.js`,
 `confirm-dialog.js`, and `button-loading.js` into `resources/js/vendor/pulse/`.
 
-- **`select.js`** — the custom dropdown behind `<x-pulse::select>`.
+- **`select.js`** — the custom dropdown behind `<x-pulse::select>`. Runs
+  once for every select present when the page loads. A select added later
+  (a repeater row cloned from a `<template>`, say) won't match that initial
+  query, so enhance it yourself:
+
+  ```js
+  import './vendor/pulse/select.js';
+
+  PulseSelect.enhance(selectEl);
+  ```
 - **`sidebar.js`** — mobile open/close behavior behind `<x-pulse::sidebar>`.
 - **`color-picker.js`** — the collapse/expand behavior behind
   `<x-pulse::color-picker>` (see "Theme picker components" above).
