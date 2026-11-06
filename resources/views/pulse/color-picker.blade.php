@@ -1,4 +1,4 @@
-@props(['name' => 'accent', 'value' => null, 'options' => []])
+@props(['name' => 'accent', 'value' => null, 'options' => [], 'disabled' => false])
 
 @php
     $value = $value ?? array_key_first($options);
@@ -20,6 +20,7 @@
         class="hidden items-center gap-2 rounded-full bg-(--pulse-neutral-100) py-1.5 pl-1.5 pr-3 text-xs font-semibold text-(--pulse-neutral-700) dark:bg-(--pulse-neutral-800) dark:text-(--pulse-neutral-200)"
         aria-haspopup="true"
         aria-expanded="false"
+        {{ $disabled ? 'disabled' : '' }}
     >
         <span data-pulse-color-picker-dot class="h-6 w-6 rounded-full {{ $selected['class'] ?? '' }}"></span>
         <span data-pulse-color-picker-label>{{ $selected['label'] ?? '' }}</span>
@@ -28,7 +29,7 @@
 
     <div data-pulse-color-picker-panel class="mt-3 flex flex-wrap gap-3">
         @foreach ($options as $optionValue => $option)
-            <label class="relative cursor-pointer">
+            <label class="relative {{ $disabled ? 'cursor-not-allowed' : 'cursor-pointer' }}">
                 <input
                     type="radio"
                     name="{{ $name }}"
@@ -38,8 +39,9 @@
                     data-label="{{ $option['label'] }}"
                     data-swatch-class="{{ $option['class'] }}"
                     {{ $optionValue === $value ? 'checked' : '' }}
+                    {{ $disabled ? 'disabled' : '' }}
                 >
-                <span class="block h-8 w-8 rounded-full {{ $option['class'] }} ring-2 ring-offset-2 ring-offset-white ring-transparent transition peer-checked:ring-(--pulse-accent) peer-focus-visible:ring-(--pulse-accent) dark:ring-offset-(--pulse-neutral-900)"></span>
+                <span class="block h-8 w-8 rounded-full {{ $option['class'] }} ring-2 ring-offset-2 ring-offset-white ring-transparent transition peer-checked:ring-(--pulse-accent) peer-focus-visible:ring-(--pulse-accent) dark:ring-offset-(--pulse-neutral-900) {{ $disabled ? 'opacity-60' : '' }}"></span>
                 <x-pulse::icon name="check" class="pointer-events-none absolute inset-0 m-auto hidden h-4 w-4 {{ $option['check_class'] ?? 'text-white' }} peer-checked:block" />
                 <span class="sr-only">{{ $option['label'] }}</span>
             </label>

@@ -6,6 +6,7 @@
         'light' => ['label' => 'Light', 'icon' => 'sun'],
         'dark' => ['label' => 'Dark', 'icon' => 'moon'],
     ],
+    'disabled' => false,
 ])
 
 {{--
@@ -16,15 +17,16 @@
 --}}
 <div {{ $attributes->class('inline-flex items-center gap-0.5 rounded-full bg-(--pulse-neutral-100) p-1 dark:bg-(--pulse-neutral-800)') }}>
     @foreach ($options as $optionValue => $option)
-        <label class="relative cursor-pointer">
+        <label class="relative {{ $disabled ? 'cursor-not-allowed' : 'cursor-pointer' }}">
             <input
                 type="radio"
                 name="{{ $name }}"
                 value="{{ $optionValue }}"
                 class="peer sr-only"
                 {{ $optionValue === $value ? 'checked' : '' }}
+                {{ $disabled ? 'disabled' : '' }}
             >
-            <span class="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-(--pulse-neutral-600) transition peer-checked:bg-(--pulse-accent) peer-checked:text-(--pulse-accent-contrast) dark:text-(--pulse-neutral-300)">
+            <span class="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-(--pulse-neutral-600) transition peer-checked:bg-(--pulse-accent) peer-checked:text-(--pulse-accent-contrast) dark:text-(--pulse-neutral-300) {{ $disabled ? 'opacity-60' : '' }}">
                 <x-pulse::icon name="{{ $option['icon'] }}" class="h-4 w-4" />
                 {{ $option['label'] }}
             </span>
