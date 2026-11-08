@@ -22,7 +22,7 @@
 
     <aside
         data-pulse-sidebar-panel
-        {{ $attributes->class('fixed left-0 top-0 z-40 flex h-screen w-64 -translate-x-full shrink-0 flex-col border-r border-(--pulse-neutral-200) bg-white transition-transform duration-200 dark:border-(--pulse-neutral-800) dark:bg-(--pulse-neutral-900) lg:sticky lg:translate-x-0') }}
+        {{ $attributes->class('fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full shrink-0 flex-col overflow-y-auto border-r border-(--pulse-neutral-200) bg-white transition-transform duration-200 dark:border-(--pulse-neutral-800) dark:bg-(--pulse-neutral-900) lg:sticky lg:top-0 lg:h-dvh lg:translate-x-0') }}
     >
         <div class="flex h-16 shrink-0 items-center justify-between border-b border-(--pulse-neutral-200) px-4 dark:border-(--pulse-neutral-800) lg:hidden">
             <span class="font-semibold text-(--pulse-neutral-900) dark:text-(--pulse-neutral-50)">{{ $brand ?? '' }}</span>
@@ -42,12 +42,12 @@
             </div>
         @endisset
 
-        <nav class="flex flex-1 flex-col space-y-4 overflow-y-auto px-3 py-4">
+        <nav class="flex flex-1 flex-col space-y-4 px-3 py-4">
             {{ $slot }}
         </nav>
 
         @isset($footer)
-            <div class="shrink-0 border-t border-(--pulse-neutral-200) p-3 dark:border-(--pulse-neutral-800)">
+            <div class="sticky bottom-0 shrink-0 border-t border-(--pulse-neutral-200) bg-white p-3 dark:border-(--pulse-neutral-800) dark:bg-(--pulse-neutral-900)">
                 {{ $footer }}
             </div>
         @endisset
